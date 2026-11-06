@@ -1,0 +1,117 @@
+@import "tailwindcss";
+
+@theme {
+  --color-paper: #f3f0e8;
+  --color-paper-2: #ebe6da;
+  --color-ink: #1c1d1c;
+  --color-graphite: #55574f;
+  --color-line: #1c1d1c1f;
+  --color-blue: #2850c8;
+  --color-blue-soft: #dde4f7;
+  --color-orange: #ff6a1a;
+  --color-orange-dark: #c24a0a;
+  --color-orange-light: #ff8a4c;
+  --ease-soft: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@theme inline {
+  --font-sans: var(--font-geologica), system-ui, sans-serif;
+  --font-mono: var(--font-roboto-mono), ui-monospace, monospace;
+}
+
+html {
+  scroll-behavior: smooth;
+  background: var(--color-paper);
+}
+
+body {
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  /* бумага с сеткой чертежа */
+  background-image:
+    linear-gradient(#2850c80f 1px, transparent 1px),
+    linear-gradient(90deg, #2850c80f 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+
+::selection {
+  background: var(--color-orange);
+  color: #fff;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-blue);
+  outline-offset: 3px;
+}
+
+/* Появление блоков при прокрутке */
+.reveal {
+  opacity: 0;
+  transform: translateY(40px);
+  transition:
+    opacity 0.95s var(--ease-soft) var(--d, 0s),
+    transform 0.95s var(--ease-soft) var(--d, 0s),
+    translate 0.5s var(--ease-soft),
+    box-shadow 0.4s ease,
+    border-color 0.3s ease,
+    background-color 0.3s ease;
+}
+.reveal.is-in {
+  opacity: 1;
+  transform: none;
+}
+
+/* «Чертёжная» линия: рисуется, когда блок появился */
+.draw {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  transition: stroke-dashoffset 1.6s var(--ease-soft) calc(var(--d, 0s) + 0.2s);
+}
+.is-in .draw,
+.draw.is-in {
+  stroke-dashoffset: 0;
+}
+
+/* бегущая строка */
+@keyframes slide {
+  to {
+    transform: translateX(-50%);
+  }
+}
+.marquee {
+  animation: slide 38s linear infinite;
+}
+
+/* мигающая лампочка «до» */
+@keyframes flicker {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  45% {
+    opacity: 1;
+  }
+  47% {
+    opacity: 0.35;
+  }
+  49% {
+    opacity: 1;
+  }
+  80% {
+    opacity: 0.8;
+  }
+}
+.flicker {
+  animation: flicker 3.2s infinite;
+}
+
+/* У тех, кто попросил в системе «меньше движения», анимации мягче, но остаются. */
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    transform: translateY(14px);
+  }
+  .marquee {
+    animation-duration: 70s;
+  }
+}
